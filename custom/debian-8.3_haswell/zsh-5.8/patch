@@ -1,0 +1,12 @@
+diff -Naur zsh-5.8.orig/Makefile.in zsh-5.8/Makefile.in
+--- zsh-5.8.orig/Makefile.in	2020-09-29 14:04:26.675296790 +0200
++++ zsh-5.8/Makefile.in	2020-09-29 14:05:09.847511193 +0200
+@@ -63,7 +63,7 @@
+ 	$(MAKE) install STRIPFLAGS="-s"
+ 
+ # install/uninstall most things
+-install: install.bin install.modules install.fns install.man install.runhelp
++install: install.bin install.modules install.fns
+ uninstall: uninstall.bin uninstall.modules uninstall.fns uninstall.man uninstall.runhelp
+ 
+ # install/uninstall just the binary

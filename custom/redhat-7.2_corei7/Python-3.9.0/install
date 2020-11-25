@@ -1,0 +1,8 @@
+
+make altinstall
+
+pushd ${CCFS_prefix_DIR}/bin
+	ln -nf python3.9 python3
+	ln -nf pip3.9 pip3
+popd
+

@@ -1,0 +1,112 @@
+#!/usr/bin/env zsh
+
+# this code must NOT rely on zprofile shortcuts
+
+
+push_path() {
+
+	pth=$1:A
+	if [[ -d $pth ]]
+	then
+		echo "path += $pth"
+		export PATH=${pth}/bin:$PATH
+		export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
+
+		rehash
+	else
+		echo "push_path($1): path don't exist"
+	fi
+
+}
+
+if [[ -d $1 ]]
+then
+
+	# in order to set the install mode, pass as first argument the ./root/plateform/$osys_$arch_$date directory
+
+	specific_dir=${1:a}
+	platform_dir=${specific_dir:h}
+	root_dir=${platform_dir:h}
+	source_dir=${0:a:h}
+
+	IFS='_' read -r osys arch date <<< ${specific_dir:t}
+
+	export CCFS_compile_OSYS=$osys
+	export CCFS_compile_ARCH=$arch
+	export CCFS_compile_DATE=$date
+
+	if [[ ${root_dir:t} != 'root' || -z $CCFS_compile_OSYS || -z $CCFS_compile_ARCH || -z $CCFS_compile_DATE ]]
+	then
+		echo "error: the platform dir must follow the convention ./root/plateform/$$osys_$$arch_$$date"
+		return 1
+	fi
+
+	# a valid dir seem to have been provided, we use it to trigger the install mode
+
+	if [[ -n $ZPROFILE_path_OLD ]]
+	then
+		export PATH=$ZPROFILE_path_OLD
+	fi
+
+	if [[ -n $ZPROFILE_ldlibrarypath_OLD ]]
+	then
+		export LD_LIBRARY_PATH=$ZPROFILE_ldlibrarypath_OLD
+	fi
+
+	rehash
+
+	export CCFS_prefix_DIR=${specific_dir}
+
+	export CCFS_archive_DIR=$source_dir/archive
+
+	export CCFS_custom_DIR=$source_dir/custom/${osys}_${arch}
+	export CCFS_log_DIR=$source_dir/log
+
+	export PATH=$source_dir/script:$PATH
+
+	echo ">\n> install mode activated for: $osys _ $arch _ $date\n>"
+	echo "CCFS_prefix_DIR=\e[33m$CCFS_prefix_DIR\e[0m"
+	if [[ -f $CCFS_prefix_DIR/export_path ]]
+	then
+		source $CCFS_prefix_DIR/export_path
+		echo "CFLAGS=\e[33m$CFLAGS\e[0m"
+	fi
+	if [[ -f $CCFS_prefix_DIR/reinstalled.log ]]
+	then
+		cat $CCFS_prefix_DIR/reinstalled.log
+	fi
+	if [[ -f $CCFS_prefix_DIR/compile_env ]]
+	then
+		source $CCFS_prefix_DIR/compile_env
+		echo "CFLAGS=\e[33m$CFLAGS\e[0m"
+	fi
+
+	echo "----"
+
+else
+
+
+	echo "must provide an install dir !"
+	return 1
+
+	source_dir=${0:a:h}
+	root_dir=${source_dir}/root
+	hostname_dir=${root_dir}/hostname
+	specific_dir=${hostname_dir}/$(hostname)
+
+	export CCFS_prefix_DIR=${specific_dir}
+
+fi
+
+push_path ${root_dir}/common
+push_path ${CCFS_prefix_DIR}
+
+typeset -T LD_LIBRARY_PATH ld_library_path
+
+typeset -U path
+typeset -U ld_library_path
+
+export LD_RUN_PATH=$LD_LIBRARY_PATH
+export LIBRARY_PATH=$LD_LIBRARY_PATH
+
+export PKG_CONFIG_PATH=${CCFS_prefix_DIR}/lib/pkgconfig

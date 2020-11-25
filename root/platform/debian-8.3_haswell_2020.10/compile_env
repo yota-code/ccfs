@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+export CFLAGS="-march=native -fPIC -I${CCFS_prefix_DIR}/include -L${CCFS_prefix_DIR}/lib -L${CCFS_prefix_DIR}/lib64"
+
+export CPPFLAGS="${CFLAGS}"
+export CXXFLAGS="${CFLAGS}"
+export FCFLAGS="${CFLAGS}"
+export LDFLAGS="${CFLAGS}"
+
+export CC="gcc"
+export CXX="g++"
+export CF="gfortran"
+export CPP="cpp"
+export LD="ld"

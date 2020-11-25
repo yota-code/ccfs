@@ -1,0 +1,11 @@
+	chmod +x ./configure
+
+	autoconf
+	
+	./configure \
+		--prefix=${CCFS_prefix_DIR} \
+		CC=${CC} CFLAGS="${CFLAGS}" \
+		CXX=${CXX} CXXFLAGS="${CXXFLAGS}" \
+		CF=${CF} FCFLAGS="${FCFLAGS}" \
+		CPP=${CPP} CPPFLAGS="${CPPFLAGS}" \
+		LD=${LD} LDFLAGS="${LDFLAGS}"
