@@ -27,6 +27,7 @@ then
 	specific_dir=${1:a}
 	platform_dir=${specific_dir:h}
 	root_dir=${platform_dir:h}
+
 	source_dir=${0:a:h}
 
 	IFS='_' read -r osys arch date <<< ${specific_dir:t}
@@ -43,21 +44,23 @@ then
 
 	# a valid dir seem to have been provided, we use it to trigger the install mode
 
-	if [[ -n $ZPROFILE_path_OLD ]]
+	if (( ${+ZPROFILE_path_OLD} ))
 	then
 		export PATH=$ZPROFILE_path_OLD
+		echo "PATH=$PATH"
 	fi
 
-	if [[ -n $ZPROFILE_ldlibrarypath_OLD ]]
+	if (( ${+ZPROFILE_ldlibrarypath_OLD} ))
 	then
 		export LD_LIBRARY_PATH=$ZPROFILE_ldlibrarypath_OLD
+		echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 	fi
 
 	rehash
 
 	export CCFS_prefix_DIR=${specific_dir}
 
-	export CCFS_archive_DIR=$source_dir/archive
+	export CCFS_archive_DIR=${root_dir:h}/archive
 
 	export CCFS_custom_DIR=$source_dir/custom/${osys}_${arch}
 	export CCFS_log_DIR=$source_dir/log

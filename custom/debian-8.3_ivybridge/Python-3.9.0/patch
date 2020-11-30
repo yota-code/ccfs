@@ -1,0 +1,18 @@
+diff -Naur Python-3.9.0.orig/Modules/Setup Python-3.9.0/Modules/Setup
+--- Python-3.9.0.orig/Modules/Setup	2020-09-29 12:25:35.220989051 +0200
++++ Python-3.9.0/Modules/Setup	2020-09-29 12:26:32.825083564 +0200
+@@ -211,10 +211,10 @@
+ 
+ # Socket module helper for SSL support; you must comment out the other
+ # socket line above, and possibly edit the SSL variable:
+-#SSL=/usr/local/ssl
+-#_ssl _ssl.c \
+-#	-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+-#	-L$(SSL)/lib -lssl -lcrypto
++SSL=${CCFS_prefix_DIR}
++_ssl _ssl.c \
++	-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
++	-L$(SSL)/lib -lssl -lcrypto
+ 
+ # The crypt module is now disabled by default because it breaks builds
+ # on many systems (where -lcrypt is needed), e.g. Linux (I believe).
