@@ -24,4 +24,3 @@ set +x
 datetime=$(date +'%Y%m%d_%H%M%S')
 
 echo "${datetime}	pip / ${package_name}" >> $CCFS_prefix_DIR/reinstalled.log
-echo "${datetime}	pip / ${package_name}" >> $CCFS_log_DIR/$(hostname).log

@@ -117,4 +117,3 @@ echo ">>> \e[1;32m${package_name}\e[0m installation done"
 datetime=$(date +'%Y%m%d_%H%M%S')
 
 echo "${datetime}	${package_name}" >> $CCFS_prefix_DIR/reinstalled.log
-echo "${datetime}	${package_name}" >> $CCFS_log_DIR/$(hostname).log
