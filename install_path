@@ -19,7 +19,15 @@ push_path() {
 
 }
 
-arg_dir="../root/hostname/$(hostname)"
+if [[ -z $1 ]]
+then
+	echo "using default for $(hostname)"
+	arg_dir="../root/hostname/$(hostname)"
+else
+	echo "using argument"
+	arg_dir=$1
+fi
+
 specific_dir=${arg_dir:A}
 
 if [[ -d $specific_dir && -f $specific_dir/compile_env ]]
