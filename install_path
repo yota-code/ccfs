@@ -74,7 +74,7 @@ then
 	export CCFS_custom_DIR=$source_dir/custom/${osys}_${arch}
 	export CCFS_log_DIR=$specific_dir/log
 
-	mkdir -p $CCFS_log_DIR
+	mkdir -p ${CCFS_log_DIR}
 
 	export PATH=$source_dir/script:$PATH
 
@@ -96,7 +96,6 @@ then
 	fi
 
 	echo "----"
-
 
 	push_path ${root_dir}/common
 	push_path ${CCFS_prefix_DIR}
