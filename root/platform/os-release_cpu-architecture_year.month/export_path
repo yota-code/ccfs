@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+root_DIR=${0:A:h}
+
+function push_path() {
+	pth=$1:A
+	echo "+ ${pth}"
+	export PATH=${pth}/bin:$PATH
+	export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
+}
+
+
+
+function push_pythonpath() {
+	pth=$1:A
+	echo "+ ${pth}"
+	export PATH=${pth}/script:$PATH
+	export PYTHONPATH=${pth}/package:$PYTHONPATH
+}
+
+push_path ${root_DIR}
+
+typeset -T PYTHONPATH pythonpath
+
+typeset -U pythonpath
+typeset -U ld_library_path
+typeset -U path
+
+rehash
