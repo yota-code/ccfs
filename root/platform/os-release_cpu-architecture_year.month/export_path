@@ -2,20 +2,30 @@
 
 root_DIR=${0:A:h}
 
-function push_path() {
-	pth=$1:A
-	echo "+ ${pth}"
-	export PATH=${pth}/bin:$PATH
-	export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
+push_path() {
+	pth=${1:A}
+	if [[ -d $pth ]]
+	then
+		echo "path += $pth"
+		export PATH=${pth}/bin:$PATH
+		export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
+		rehash
+	else
+		echo "push_path($1): path don't exist"
+	fi
 }
 
-
-
-function push_pythonpath() {
-	pth=$1:A
-	echo "+ ${pth}"
-	export PATH=${pth}/script:$PATH
-	export PYTHONPATH=${pth}/package:$PYTHONPATH
+push_pythonpath() {
+	pth=${1:A}
+	if [[ -d $pth ]]
+	then
+		echo "path += $pth"
+		export PATH=${pth}/script:$PATH
+		export PYTHONPATH=${pth}/package:$PYTHONPATH
+		rehash
+	else
+		echo "push_pythonpath($1): path don't exist"
+	fi
 }
 
 push_path ${root_DIR}

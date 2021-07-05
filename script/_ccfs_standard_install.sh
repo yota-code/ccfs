@@ -69,6 +69,7 @@ else
 fi
 	
 # configure
+file ${CCFS_custom_DIR}/${package_name}/configure
 configure_FILE=${CCFS_custom_DIR}/${package_name}/configure
 if [[ -e ${configure_FILE} ]]
 then

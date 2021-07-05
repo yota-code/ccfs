@@ -1,28 +1,37 @@
 #!/usr/bin/env zsh
 
-# this code must NOT rely on zprofile shortcuts
-
+# this code must NOT rely on zprofile shortcuts to avoid endless dependencies
 
 push_path() {
-
-	pth=$1:A
+	pth=${1:A}
 	if [[ -d $pth ]]
 	then
 		echo "path += $pth"
 		export PATH=${pth}/bin:$PATH
 		export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
-
 		rehash
 	else
 		echo "push_path($1): path don't exist"
 	fi
+}
 
+push_pythonpath() {
+	pth=${1:A}
+	if [[ -d $pth ]]
+	then
+		echo "path += $pth"
+		export PATH=${pth}/script:$PATH
+		export PYTHONPATH=${pth}/package:$PYTHONPATH
+		rehash
+	else
+		echo "push_pythonpath($1): path don't exist"
+	fi
 }
 
 if [[ -z $1 ]]
 then
 	echo "using default for $(hostname)"
-	arg_dir="../root/hostname/$(hostname)"
+	arg_dir="${0:A:h}/root/hostname/$(hostname)"
 else
 	echo "using argument"
 	arg_dir=$1
@@ -110,9 +119,11 @@ then
 
 	export PKG_CONFIG_PATH=${CCFS_prefix_DIR}/lib/pkgconfig
 
+	echo "\ninstallation will be made into \e[35m${CCFS_prefix_DIR}\e[0m"
+
 else
 
-	echo "you must create a specific dir in ./root/platform and a link in ./root/hostname"
+	echo "you must create a specific dir in ./root/platform and a link in ./root/hostname and a compile_env file"
 
 fi
 

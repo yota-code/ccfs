@@ -1,0 +1,10 @@
+
+rm -rf ../${package_name}/pkgs/sqlite3.8.0
+
+../${package_name}/unix/configure \
+	--prefix=${CCFS_prefix_DIR} \
+	CC=${CC} CFLAGS="${CFLAGS}" \
+	CXX=${CXX} CXXFLAGS="${CXXFLAGS}" \
+	CF=${CF} FCFLAGS="${FCFLAGS}" \
+	CPP=${CPP} CPPFLAGS="${CPPFLAGS}" \
+	LD=${LD} LDFLAGS="${LDFLAGS}"
