@@ -1,0 +1,9 @@
+
+unset HTTP_PROXY
+unset HTTPS_PROXY
+
+chmod +x ../${package_name}/config
+
+../${package_name}/config \
+	--prefix=${CCFS_prefix_DIR} \
+	--openssldir=${CCFS_prefix_DIR}/ssl

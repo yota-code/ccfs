@@ -1,0 +1,9 @@
+chmod +x ../${package_name}/configure
+
+../${package_name}/configure \
+	--prefix=${CCFS_prefix_DIR} --with-openssl=${CCFS_prefix_DIR} \
+	CC=${CC} CFLAGS="${CFLAGS}" \
+	CXX=${CXX} CXXFLAGS="${CXXFLAGS}" \
+	CF=${CF} FCFLAGS="${FCFLAGS}" \
+	CPP=${CPP} CPPFLAGS="${CPPFLAGS}" \
+	LD=${LD} LDFLAGS="${LDFLAGS}"

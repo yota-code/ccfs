@@ -15,7 +15,7 @@ set -x
 
 setopt ERR_EXIT
 
-pip3 install $package_name --upgrade --no-index --find-links ${CCFS_archive_DIR}/pyp
+pip3 install $package_name --upgrade --no-index --find-links ${CCFS_archive_DIR}/pip
 
 unsetopt ERR_EXIT
 

@@ -1,28 +1,37 @@
 #!/usr/bin/env zsh
 
-# this code must NOT rely on zprofile shortcuts
-
+# this code must NOT rely on zprofile shortcuts to avoid endless dependencies
 
 push_path() {
-
-	pth=$1:A
+	pth=${1:A}
 	if [[ -d $pth ]]
 	then
 		echo "path += $pth"
 		export PATH=${pth}/bin:$PATH
 		export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
-
 		rehash
 	else
 		echo "push_path($1): path don't exist"
 	fi
+}
 
+push_pythonpath() {
+	pth=${1:A}
+	if [[ -d $pth ]]
+	then
+		echo "path += $pth"
+		export PATH=${pth}/script:$PATH
+		export PYTHONPATH=${pth}/package:$PYTHONPATH
+		rehash
+	else
+		echo "push_pythonpath($1): path don't exist"
+	fi
 }
 
 if [[ -z $1 ]]
 then
 	echo "using default for $(hostname)"
-	arg_dir="../root/hostname/$(hostname)"
+	arg_dir="${0:A:h}/root/hostname/$(hostname)"
 else
 	echo "using argument"
 	arg_dir=$1
@@ -41,11 +50,16 @@ then
 
 	IFS='_' read -r osys arch date <<< ${specific_dir:t}
 
+	echo "<$osys> <$arch> <$date>"
+
 	export CCFS_compile_OSYS=$osys
 	export CCFS_compile_ARCH=$arch
 	export CCFS_compile_DATE=$date
 
-	if [[ ${root_dir:t} != 'root' || -z $CCFS_compile_OSYS || -z $CCFS_compile_ARCH || -z $CCFS_compile_DATE ]]
+	echo "${root_dir:t} <$CCFS_compile_OSYS> <$CCFS_compile_ARCH> <$CCFS_compile_DATE>"
+
+	# if [[ ${root_dir:t} != 'root' || -z $CCFS_compile_OSYS || -z $CCFS_compile_ARCH || -z $CCFS_compile_DATE ]]
+	if [[ -z $CCFS_compile_OSYS || -z $CCFS_compile_ARCH || -z $CCFS_compile_DATE ]]
 	then
 		echo "error: the platform dir must follow the convention ./root/plateform/$$osys_$$arch_$$date"
 		return 1
@@ -56,20 +70,23 @@ then
 	if (( ${+ZPROFILE_path_OLD} ))
 	then
 		export PATH=$ZPROFILE_path_OLD
-		echo "PATH=$PATH"
+	else 
+		export PATH="/usr/local/bin:/usr/bin:/bin"
 	fi
 
 	if (( ${+ZPROFILE_ldlibrarypath_OLD} ))
 	then
 		export LD_LIBRARY_PATH=$ZPROFILE_ldlibrarypath_OLD
 		echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+	else
+		export LD_LIBRARY_PATH=""
 	fi
 
 	rehash
 
 	export CCFS_prefix_DIR=${specific_dir}
 
-	export CCFS_archive_DIR=${root_dir:h}/archive
+	export CCFS_archive_DIR=$source_dir/archive
 
 	export CCFS_custom_DIR=$source_dir/custom/${osys}_${arch}
 	export CCFS_log_DIR=$specific_dir/log
@@ -80,11 +97,7 @@ then
 
 	echo ">\n> install mode activated for: $osys _ $arch _ $date\n>"
 	echo "CCFS_prefix_DIR=\e[33m$CCFS_prefix_DIR\e[0m"
-	if [[ -f $CCFS_prefix_DIR/export_path ]]
-	then
-		source $CCFS_prefix_DIR/export_path
-		echo "CFLAGS=\e[33m$CFLAGS\e[0m"
-	fi
+
 	if [[ -f $CCFS_prefix_DIR/reinstalled.log ]]
 	then
 		cat $CCFS_prefix_DIR/reinstalled.log
@@ -95,8 +108,6 @@ then
 		echo "CFLAGS=\e[33m$CFLAGS\e[0m"
 	fi
 
-	echo "----"
-
 	push_path ${root_dir}/common
 	push_path ${CCFS_prefix_DIR}
 
@@ -105,14 +116,19 @@ then
 	typeset -U path
 	typeset -U ld_library_path
 
+	echo "PATH=$PATH"
+	echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+
 	export LD_RUN_PATH=$LD_LIBRARY_PATH
 	export LIBRARY_PATH=$LD_LIBRARY_PATH
 
 	export PKG_CONFIG_PATH=${CCFS_prefix_DIR}/lib/pkgconfig
 
+	echo "\ninstallation will be made into \e[35m${CCFS_prefix_DIR}\e[0m"
+
 else
 
-	echo "you must create a specific dir in ./root/platform and a link in ./root/hostname"
+	echo "you must create a specific dir in ./root/platform and a link in ./root/hostname and a compile_env file"
 
 fi
 

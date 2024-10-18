@@ -1,0 +1,12 @@
+	chmod +x ./configure
+
+	autoconf
+	
+	./configure \
+		--prefix=${CCFS_prefix_DIR} \
+		--without-tcltk \
+		CC=${CC} CFLAGS="${CFLAGS} -std=gnu99" \
+		CXX=${CXX} CXXFLAGS="${CXXFLAGS}" \
+		CF=${CF} FCFLAGS="${FCFLAGS}" \
+		CPP=${CPP} CPPFLAGS="${CPPFLAGS}" \
+		LD=${LD} LDFLAGS="${LDFLAGS}"
