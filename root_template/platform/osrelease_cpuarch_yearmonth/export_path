@@ -2,28 +2,54 @@
 
 root_DIR=${0:A:h}
 
-function push_path() {
-	pth=$1:A
-	echo "+ ${pth}"
-	export PATH=${pth}/bin:$PATH
-	export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
+push_path() {
+	pth=${1:A}
+	if [[ -d $pth ]]
+	then
+		echo "path :: $pth"
+		export PATH=${pth}/bin:$PATH
+		export LD_LIBRARY_PATH=${pth}/lib:${pth}/lib64:$LD_LIBRARY_PATH
+		rehash
+	else
+		echo "push_path($1): path don't exist"
+	fi
 }
 
-
-
-function push_pythonpath() {
-	pth=$1:A
-	echo "+ ${pth}"
-	export PATH=${pth}/script:$PATH
-	export PYTHONPATH=${pth}/package:$PYTHONPATH
+push_pythonpath() {
+	pth=${1:A}
+	if [[ -d $pth ]]
+	then
+		echo "path :: $pth"
+		export PATH=${pth}/script:$PATH
+		export PYTHONPATH=${pth}/package:$PYTHONPATH
+		rehash
+	else
+		echo "push_pythonpath($1): path don't exist"
+	fi
 }
 
 push_path ${root_DIR}
+push_path ${root_DIR}/../linux_amd64
+push_path ${root_DIR}/../../common
 
 typeset -T PYTHONPATH pythonpath
+typeset -T LD_LIBRARY_PATH ld_library_path
 
 typeset -U pythonpath
 typeset -U ld_library_path
+
 typeset -U path
 
 rehash
+
+if [[ -d ${root_DIR}/pyenv ]]
+then
+	echo "venv :: ${root_DIR}/pyenv"
+	source ${root_DIR}/pyenv/bin/activate
+fi
+
+CCFS_user_LOG=${root_DIR}/user.log
+
+touch ${CCFS_user_LOG}
+echo "$(date +'%Y%m%d:%H%M%S') $(whoami)@$(hostname)" >> ${CCFS_user_LOG}
+echo "$(tail -2048 ${CCFS_user_LOG})" > ${CCFS_user_LOG}

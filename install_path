@@ -2,6 +2,12 @@
 
 # this code must NOT rely on zprofile shortcuts to avoid endless dependencies
 
+if (( ! zsh_eval_context[(I)file] ))
+then
+	echo "file must be sourced"
+	return
+fi
+
 push_path() {
 	pth=${1:A}
 	if [[ -d $pth ]]
@@ -65,7 +71,7 @@ then
 		return 1
 	fi
 
-	# a valid dir seem to have been provided, we use it to trigger the install mode
+	# a valid dir seems to have been provided, we use it to trigger the install mode
 
 	if (( ${+ZPROFILE_path_OLD} ))
 	then
